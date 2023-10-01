@@ -143,7 +143,7 @@ console.log(String(23), 23);
 console.log(typeof typeof undefined);
 
 //TYPE COERCION, when JS convert
-console.log("I am " + 23 + " year old"); // '+' coerced number to string
+console.log("I am " + 23 + " years old"); // '+' coerced number to string
 console.log("23" - "10" - 3); // '-' coerced string to number
 console.log("23" / "2"); //coerced both strings to number
 console.log("23" * "2"); //coerced both dtrings to number
@@ -166,7 +166,9 @@ console.log(9 / 0); //OUTPUT -> Infinity
 console.log(-9 / 0); //OUTPUT -> -Infinity
 console.log(typeof -Infinity); //OUTPUT -> number
 console.log(typeof typeof 0); //OUTPUT -> string
-
+console.log(Infinity - Infinity); //OUTPUT -> NaN
+console.log(Infinity / Infinity); //OUTPUT -> NaN
+console.log(0 ** 0); //OUTPUT -> 1
 
 //only 5 falsy values: 0, ''(empty string), undefined, NaN, null
 
@@ -200,7 +202,77 @@ console.log(typeof fav); //user input is always string
 
 if (Number(fav) !== 23) console.log("You are so wrong!");
 //loose equality operator must be avoided  & manual type conversion should be used if required along with strict operators
-*/
 
 //BOOLEAN LOGIC - A branch of comp sci which uses true & false values to solve complex logical problems
 //BOOLEAN OPERATORS to combine true & false values
+const hasDriverlicense = true;
+const hasGoodVision = true;
+const isTired = true;
+
+if (hasDriverlicense && hasGoodVision && !isTired) {
+  console.log(`You can drive!`);
+} else {
+  console.log(`Someone else should drive...`);
+}
+
+//SWITCH STATEMENT
+const day = `monday`;
+
+switch (day) {
+  case "monday":
+    console.log(`Plan a course structure`);
+    console.log(`Go to a coding meetup`);
+    break;
+    
+    case "tuesday":
+      console.log(`Prepare theory lectures`);
+      break;
+
+      case "wednesday":
+  case "thursday":
+    console.log(`Write code examples`);
+    break;
+    
+    case "friday":
+    console.log(`Record videos`);
+    break;
+
+  case "saturday":
+  case "sunday":
+    console.log(`Enjoy the weekend :D`);
+    break;
+    
+    default:
+      console.log(`Not a valid day!`);
+    break;
+}
+console.log(`\n`);
+if (day === "monday") {
+  console.log(`Plan a course structure`);
+  console.log(`Go to a coding meetup`);
+} else if (day === "tuesday") {
+  console.log(`Prepare theory lectures`);
+} else if (day === "wednesday" || day === "thursday") {
+  console.log(`Write code examples`);
+} else if (day === "friday") {
+  console.log(`Record videos`);
+} else if (day === "satday" || day === "sunday") {
+  console.log(`Enjoy the weekend :D`);
+} else {
+  console.log(`Not a valid day!`);
+}
+*/
+
+//TERNARY OPERATOR - because 3 parts
+const age = 112;
+
+age >= 18
+  ? console.log(`I'd like to drink wine 🍷`)
+  : console.log(`I'd like to drink water 💧`);
+
+const drink = age >= 18 ? "wine 🍷" : "water 💧";
+console.log(drink);
+
+console.log(`I'd like to drink ${age >= 18 ? "wine 🍷" : "water 💧"}.`);
+
+// console.log(`I'd like to drink ${if(age>=18){"wine 🍷"} else{"water 💧"}}.`);
