@@ -198,3 +198,56 @@ again.addEventListener("click", function () {
   message.textContent = "Start guessing...";
 });
 */
+
+document.addEventListener("keydown", function (e) {
+  console.log(e);
+  if (e.key === "Enter") {
+    const guess = document.querySelector(".guess").value;
+    const guessNum = Number(guess);
+
+    // no input
+    if (!guess) {
+      // document.querySelector(".message").textContent = "⛔️ Empty guess field!";
+      displayMessage("⛔️ Empty guess field!");
+    }
+    // out of bounds
+    else if (guessNum < 1 || guessNum > 20) {
+      displayMessage("⛔️ Invalid guess!");
+    }
+
+    // player wins
+    else if (guessNum === secretNumber) {
+      document.querySelector(".number").textContent = secretNumber;
+
+      document.querySelector(
+        ".message"
+      ).textContent = `🎉 You guessed the correct number!`;
+
+      document.querySelector("body").style.backgroundColor = "#60b347";
+      document.querySelector(".number").style.width = "30rem";
+
+      if (score > highscore) {
+        highscore = score;
+        document.querySelector(".highscore").textContent = highscore;
+      }
+    }
+
+    // guess is wrong
+    else if (guess !== secretNumber) {
+      if (score > 1) {
+        // document.querySelector(".message").textContent =
+        //   guessNum > secretNumber ? "📈 Too High!" : "📉 Too Low!";
+        score--;
+        displayMessage(
+          guessNum > secretNumber ? "📈 Too High!" : "📉 Too Low!"
+        );
+        document.querySelector(".score").textContent = score;
+      } else {
+        // document.querySelector(".message").textContent = "💥 You lost!";
+        displayMessage("💥 You lost!");
+
+        document.querySelector(".score").textContent = 0;
+      }
+    }
+  }
+});
