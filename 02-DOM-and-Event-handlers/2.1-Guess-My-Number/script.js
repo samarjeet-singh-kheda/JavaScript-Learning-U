@@ -200,7 +200,6 @@ again.addEventListener("click", function () {
 */
 
 document.addEventListener("keydown", function (e) {
-  console.log(e);
   if (e.key === "Enter") {
     const guess = document.querySelector(".guess").value;
     const guessNum = Number(guess);
