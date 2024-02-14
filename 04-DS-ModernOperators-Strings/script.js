@@ -1,11 +1,228 @@
 // code is arranged from bottom to top in sections
-"use strict";
+("use strict");
 
-// Data needed for a later exercise
+//!  ********************************************* STRING PRACTICE *********************************************
 const flights =
   "_Delayed_Departure;fao93766109;txl2133758440;11:25+_Arrival;bru0943384722;fao93766109;11:45+_Delayed_Arrival;hel7439299980;fao93766109;12:05+_Departure;fao93766109;lis2323639855;12:30";
 
-////////////////////////////////////////////////////////////////////////////////////////////
+// 🔴 Delayed Departure from FAO to TXL (11h25)
+//              Arrival from BRU to FAO (11h45)
+//   🔴 Delayed Arrival from HEL to FAO (12h05)
+//            Departure from FAO to LIS (12h30)
+
+for (const trip of flights.split("+")) {
+  const [type, departure, arrival, time] = trip.split(";");
+
+  console.log(
+    `${type.includes("Delayed") ? "🔴" : ""} ${type
+      .replaceAll("_", " ")
+      .trim()} from ${departure.slice(0, 3).toUpperCase()} to ${arrival
+      .slice(0, 3)
+      .toUpperCase()} (${time.replace(":", "h")})`.padStart(45)
+  );
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+
+
+
+
+//!  ************************************************* STRINGS *************************************************
+const airline = "TAP Air Portugal";
+const plane = "A320";
+
+console.log(plane[0]);
+console.log(plane[1]);
+console.log(plane[2]);
+console.log("B737"[0]);
+
+console.log(airline.length);
+console.log("8737".length);
+
+console.log(airline.indexOf("r"));   //?     indexOf(e)
+console.log(airline.lastIndexOf("r"));  //?    lastIndexOf(e)
+console.log(airline.indexOf("Portugal"));
+console.log(airline.indexOf("France"));
+
+//!   string are immutable as they're primitive data types, thus all these methods returns a new substring and do not affect the original at all
+console.log(airline.slice(4));          //?     slice(s, e)
+console.log(airline.slice(4, 7));
+
+console.log(airline.slice(0, airline.indexOf(" "))); //?   [begin, end)
+console.log(airline.slice(airline.lastIndexOf(" ") + 1));
+
+console.log(airline.slice(-2)); //?    -ve indices also work for string
+console.log(airline.slice(1, -1));
+
+//!   EXAMPLE
+const checkMiddleSeat = function (seat) {
+  return seat.slice(-1) === "B" || seat.slice(-1) === "E";
+};
+
+console.log(checkMiddleSeat("11B"));
+console.log(checkMiddleSeat("23C"));
+console.log(checkMiddleSeat("3E"));
+
+const temp = new String("jonas");
+console.log(typeof temp);
+console.log(typeof temp.slice(1, -1));
+
+
+
+
+
+
+
+const airline = "TAP Air Portugal122";
+console.log(airline.toLowerCase()); //?     toLowerCase()
+console.log(airline.toUpperCase()); //?     toUpperCase()
+// console.log(typeof airline.slice(-1, 0));
+
+//!   EXAMPLE ---->   Fix capitalization in name
+const passenger = "jOnAs";
+// const lowerCaseName = passenger.toLowerCase();
+// const firstLetter = lowerCaseName.slice(0, 1).toUpperCase();
+// console.log(firstLetter + lowerCaseName.slice(1));
+const correctFormatStr = (str) => {
+  return str[0].toUpperCase() + str.slice(1).toLowerCase();
+};
+console.log(correctFormatStr(passenger));
+
+//!   EXAMPLE ---->   Comparing email
+const email = "hello@jonas.io";
+const loginEmail = "    HeLlo@Jonas.io \n \t";
+console.log(email === loginEmail.trim().toLowerCase()); //?     trim()
+
+
+
+*/
+
+const trialStr = "      first \n second \t    third  \n";
+console.log(trialStr.trimEnd()); //?     .trimEnd()
+console.log(trialStr.trimStart()); //?     .trimStart()
+
+//!   EXAMPLE ---->   Using replace change the format of string
+const priceGB = "288,97£";
+const priceUS = priceGB
+  .replace(",", ".")
+  .replace(priceGB[priceGB.length - 1], "$"); //?     .replace(original, new)
+console.log(priceUS);
+
+const announcement =
+  "All passengers come to boarding door 23. Boarding door 23!";
+console.log(announcement.replaceAll("door", "gate")); //?     .replaceAll(original, new)
+console.log(announcement.replace(/door/g, "gate")); //!   here, regular expression is used (between / /) along with "g" (global) flag
+
+//!   Methods that returns Booleans
+const plane = "Airbus A320neo";
+const plane2 = "Airbus A320neojs";
+console.log(plane.includes("A320")); //?   .includes(searchStr, pos)
+console.log(plane.includes("A", plane.indexOf("n")));
+console.log(plane.includes("Boeing"));
+console.log(plane.startsWith("Airbus")); //?     .startWith(searchStr, pos)
+console.log(plane.startsWith("Airbus", 4));
+console.log(plane.endsWith("neo")); //?
+console.log(plane.endsWith("neo", 1)); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! GOOGLE IT (concat and reverse as well)
+
+//!     Practice Exercise
+const checkBaggage = (items) => {
+  const baggage = items.toLowerCase();
+
+  if (baggage.includes("knife") || baggage.includes("gun")) {
+    console.log("You are not allowed on board.");
+  } else {
+    console.log("Welcome aboard!");
+  }
+};
+
+checkBaggage("I have a laptop, some Food & a Pocket Knife. ");
+checkBaggage("Socks and camera.");
+checkBaggage("Got some snacks and a gun for safety.");
+
+//?       .split(sep, limit=str.length)
+console.log("a+very+nice+string".split("+"));
+console.log("a+very+nice+string".split("+", 0));
+console.log("a+very+nice+string".split("+", 2));
+console.log("a+very+nice+string".split("+", 2));
+const [firstName, lastName] = "SAMARJEET SinGh".toLowerCase().split(" ");
+
+console.log(firstName, lastName);
+
+console.log(["Mr.", firstName, lastName.toUpperCase(), 2003, true].join(" ")); //?     arr.join(sep)
+
+const capitalizeName = function (name) {
+  // const nameArr = name.split(" ");
+  // let res = "";
+  // for (const nameEl of nameArr) {
+  //   res += nameEl[0].toUpperCase() + nameEl.slice(1) + " ";
+  // }
+  // return res.slice(0, -1);
+
+  const names = name.split(" ");
+  const nameUpper = [];
+  for (const n of names) {
+    // nameUpper.push(n[0] + n.slice(1));
+    nameUpper.push(n.replace(n[0], n[0].toUpperCase()));
+  }
+  return nameUpper.join(" ");
+};
+
+console.log(capitalizeName("jessica ann smith davis"));
+console.log(capitalizeName("gagan singh"));
+
+//?     padding      ---->   .padEnd(maxLen, fillStr)       .padStart(maxLen, fillStr)
+const message = "Go to gate 23!";
+console.log(message.padStart(20, "+").padEnd(12, "*"));
+console.log(message.padStart(20, "+").padEnd(30, "*"));
+console.log("John".padStart(6, "Mister"));
+
+const maskedCreditCard = function (num) {
+  // const str = String(num);
+  const str = num + ""; //!     another way of converting a number to a string
+
+  return str.slice(-4).padStart(str.length, "*");
+};
+
+console.log(maskedCreditCard(11122233373732787));
+console.log(maskedCreditCard("1112223337373278712"));
+
+const enhancedCreditCardMasker = function (creditCardNum) {
+  let res = "";
+
+  for (let i = 0; i < creditCardNum.lastIndexOf(" "); i++) {
+    if (creditCardNum[i] != " ") {
+      res += "*";
+    } else {
+      res += creditCardNum[i];
+    }
+  }
+
+  for (let i = creditCardNum.lastIndexOf(" "); i < creditCardNum.length; i++) {
+    res += creditCardNum[i];
+  }
+
+  return res;
+};
+
+console.log(enhancedCreditCardMasker("4111 1111 1111 1111"));
+console.log(enhancedCreditCardMasker("4111 1111 1111 1111 1223"));
+
+//?   .repeat()
+const message2 = "Bad weather... All Departures Delayed... ";
+console.log(message2.repeat(5));
+
+const planesInLine = function (n) {
+  console.log(`There are ${n} planes waiting in line ${"🛩 ".repeat(n)}`);
+};
+
+planesInLine(3);
+planesInLine(23);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //!  ***************************************** ENHANCED OBJECT LITERAL *****************************************
 //?   3 ways ES-6 made it to easy to write object literals
 
@@ -27,7 +244,6 @@ const openingHours = {
     open: 1, // Open 24 hours
     close: 24,
   },
-  sun: 10,
 
   //! ES-6 way (in square brackets any expression can be written)
   [weekdays[0]]: {
@@ -118,8 +334,195 @@ const restaurant = {
   },
 };
 
+/*
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//!  ************************************************** MAPS **************************************************
+
+const rest = new Map();
+
+//?     SET property
+rest.set("name", "Classico Italiano");
+rest.set(1, "Firenze, Italy");
+console.log(rest.set(2, "Lisbon, Portugal"));
+
+rest
+  .set("categories", ["Italian", "Pizzeria", "Vegetarian", "Organic"])
+  .set("open", 12)
+  .set("close", 23)
+  .set(true, "We are open :D")
+  .set(false, "We are closed :(");
+// rest.set(true, "hallelujah");
+
+//?     GET property
+console.log(rest);
+console.log(rest.get("name"));
+console.log(rest.get("categories"));
+console.log(rest.get(true));
+console.log(rest.get(1));
+console.log(rest.get("n/a"));
+
+//!   example (2 lines)
+// const time = 21;
+// console.log(rest.get(time > rest.get("open") && time < rest.get("close")));
+
+console.log(rest.has("categories")); //?     HAS property
+console.log(rest.delete(2)); //?     DELETE property
+console.log(rest);
+
+//?     CLEAR property
+// rest.clear();
+// console.log(rest);
+
+console.log(rest.size); //?     SIZE property
+
+// console.log(rest.set([1, 2], "test"));
+// console.log(rest.get([1, 2])); //!   OUTPUT----->   undefined (but why???????????)
+//!   it happened because both these arrays have same elements but they are stored in different places in heap memory
+//!   instead following can be used :-
+
+const arr = [1, 2, 3];
+console.log(rest.set(arr, "test"));
+console.log(rest.get(arr)); //!   OUTPUT-----> 'test' (works as expected :D )
+
+// console.log(rest.set(document.querySelector("h1"), "Selected heading"));
+
+//?   Another way of MAP initialization
+const questions = new Map([
+  ["question", "Which is the best programming language?"],
+  [1, "C"],
+  [2, "Python"],
+  [3, "Javascript"],
+  ["correct", 3],
+  [true, "Correct"],
+  [false, "Try again!"],
+]);
+console.log(questions);
+
+//?   Convert object to map
+// console.log(Object.entries(openingHours));
+const hoursMap = new Map(Object.entries(openingHours));
+console.log(hoursMap);
+
+//! QUIZ APP
+// console.log(questions.get("question"));
+// for (const [key, value] of questions) {
+//   if (typeof key === "number") {
+//     console.log(`Option ${key}: ${value}`);
+//   }
+// }
+// const answer = Number(prompt("Enter your answer!"));
+// // console.log(answer);
+// alert(questions.get(answer === questions.get("correct")));
+
+console.log([...questions]); //?    converted map to array, just like sets
+
+console.log([...questions.keys()]);
+console.log(questions.values());
+console.log(questions.entries());
+
+
+
+
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////
-//!  **************************************************** OPTIONAL CHAINING (?.) ****************************************************
+//!  ************************************************** SETS **************************************************
+
+//?   an iterable needs to be passed in the SET constructor
+//?   it is just a bunch of values grouped together (like array), but it is not similar to an array because the order of elements of set is irrelevant & every element is unique
+//?   set is also an iterable
+
+const orderSet = new Set([
+  "Pasta",
+  "Pizza",
+  "Pizza",
+  "Risotto",
+  "Pasta",
+  "Pizza",
+  1,
+]);
+console.log(orderSet);
+
+console.log(new Set("arguments")); //?    it is possible because string is also an iterable
+
+console.log(orderSet.size);
+console.log(orderSet.has("Pizza"));
+console.log(orderSet.has("Bread"));
+console.log(orderSet.add("Garlic Bread"));
+console.log(orderSet.delete("Risotto"));
+// orderSet.clear();
+console.log(orderSet);
+console.log(orderSet.keys());
+console.log(orderSet.values());
+console.log(orderSet.entries());
+
+for (const order of orderSet) {
+  console.log(order);
+}
+console.log(
+  "\n********************************************************Example********************************************************\n"
+);
+//!      Example
+const staff = ["Waiter", "Chef", "Waiter", "Manager", "Chef", "Waiter"];
+const staffUnique = [...new Set(staff)];
+
+console.log(staffUnique);
+
+//?     to find the number of unique positions directly
+console.log(
+  new Set(["Waiter", "Chef", "Waiter", "Manager", "Chef", "Waiter"]).size
+);
+
+console.log(new Set("samarjeet singh kheda").size);
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+//!  ********************************************* LOOPING OBJECTS *********************************************
+
+//? Property NAMES
+const properties = Object.keys(openingHours);
+console.log(properties);
+
+let openStr = `We are open on ${properties.length} days: `;
+for (const day of properties) {
+  openStr += `${day} `;
+}
+console.log(openStr);
+
+//? Property VALUES
+const values = Object.values(openingHours);
+console.log(values);
+
+//? ENTIRE OBJECT
+const entries = Object.entries(openingHours);
+console.log(entries);
+
+for (const [key, { open, close }] of entries) {
+  console.log(`On ${key}, we open at ${open} & we close at ${close}`);
+}
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+//!  ***************************************** OPTIONAL CHAINING (?.) *****************************************
 
 // console.log(restaurant.openingHours.sun);
 // console.log(restaurant.openingHours.sun.open);   //!   TypeError:  because we are accessing a property on undefined as sun doesn't exist in openingHours
@@ -135,9 +538,30 @@ const restaurant = {
 // }
 
 //?     METHOD - 2
-console.log(restaurant.openingHours?.sun?.open); //!   (?.) if property before it doesn't exist it returns undefined, otherwise continue
+console.log(restaurant.openingHours.sun?.open); //!   (?.) if property before it doesn't exist it returns undefined, otherwise continue
 
-/* 
+//?   Example
+const days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+
+for (const day of days) {
+  // console.log(`For ${day}:`);
+  // console.log("Opening Time:", restaurant.openingHours[day]?.open);
+  // console.log("Closing Time:", restaurant.openingHours[day]?.close, "\n");
+
+  const open = restaurant.openingHours[day]?.open ?? "N/A";
+  console.log(`On ${day}, we open at ${open}`);
+}
+
+//?     Methods
+console.log(restaurant.open?.(0, 1) ?? "Method doesn't exist.");
+console.log(restaurant.order?.(0, 1) ?? "Method doesn't exist.");
+
+//?     Arrays
+const users = [{ name: "john", email: "hello@jonas.io" }];
+console.log(users[0]?.name ?? "Array is empty");
+
+console.log(users[1]?.name ?? "Second element do not exist.");
+
 
 
 
