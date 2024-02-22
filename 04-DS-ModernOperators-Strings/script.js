@@ -126,7 +126,11 @@ console.log(plane.includes("Boeing"));
 console.log(plane.startsWith("Airbus")); //?     .startWith(searchStr, pos)
 console.log(plane.startsWith("Airbus", 4));
 console.log(plane.endsWith("neo")); //?
-console.log(plane.endsWith("neo", 1)); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! GOOGLE IT (concat and reverse as well)
+console.log(plane.endsWith("neo", 1));
+
+//! .concat(str1, str2, str3, ....... ,strN)
+console.log(plane.concat(" will", " arrive", " at", " 08:30P.M."));
+console.log(plane.concat(" will", " leave", " from", " terminal", 3));
 
 //!     Practice Exercise
 const checkBaggage = (items) => {
@@ -143,7 +147,7 @@ checkBaggage("I have a laptop, some Food & a Pocket Knife. ");
 checkBaggage("Socks and camera.");
 checkBaggage("Got some snacks and a gun for safety.");
 
-//?       .split(sep, limit=str.length)
+//?       .split(sep, limit)
 console.log("a+very+nice+string".split("+"));
 console.log("a+very+nice+string".split("+", 0));
 console.log("a+very+nice+string".split("+", 2));
@@ -153,6 +157,7 @@ const [firstName, lastName] = "SAMARJEET SinGh".toLowerCase().split(" ");
 console.log(firstName, lastName);
 
 console.log(["Mr.", firstName, lastName.toUpperCase(), 2003, true].join(" ")); //?     arr.join(sep)
+console.log(["Mr.", firstName, lastName.toUpperCase(), 2003, true].join());
 
 const capitalizeName = function (name) {
   // const nameArr = name.split(" ");
@@ -178,6 +183,8 @@ console.log(capitalizeName("gagan singh"));
 const message = "Go to gate 23!";
 console.log(message.padStart(20, "+").padEnd(12, "*"));
 console.log(message.padStart(20, "+").padEnd(30, "*"));
+console.log(message.padStart(20).padEnd(30, "*"));
+console.log(message.padStart(20, "1234567890").padEnd(22, "1234567890"));
 console.log("John".padStart(6, "Mister"));
 
 const maskedCreditCard = function (num) {
@@ -214,6 +221,7 @@ console.log(enhancedCreditCardMasker("4111 1111 1111 1111 1223"));
 //?   .repeat()
 const message2 = "Bad weather... All Departures Delayed... ";
 console.log(message2.repeat(5));
+console.log(message2.repeat());
 
 const planesInLine = function (n) {
   console.log(`There are ${n} planes waiting in line ${"🛩 ".repeat(n)}`);
