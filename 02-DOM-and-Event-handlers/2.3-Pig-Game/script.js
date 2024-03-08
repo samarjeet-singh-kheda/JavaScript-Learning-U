@@ -7,6 +7,8 @@ const score0El = document.querySelector("#score--0");
 const score1El = document.getElementById("score--1");
 const current0El = document.getElementById("current--0");
 const current1El = document.getElementById("current--1");
+const playerName0El = document.getElementById("name--0");
+const playerName1El = document.getElementById("name--1");
 
 const diceEl = document.querySelector(".dice");
 const btnNew = document.querySelector(".btn--new");
@@ -14,6 +16,15 @@ const btnRoll = document.querySelector(".btn--roll");
 const btnHold = document.querySelector(".btn--hold");
 
 let playing, scores, currentScore, activePlayer;
+
+const enterUsernames = function () {
+  const playerName0 = prompt("Enter Player 1 name");
+  const playerName1 = prompt("Enter Player 2 name");
+
+  playerName0El.textContent = playerName0;
+  playerName1El.textContent = playerName1;
+};
+// enterUsernames();
 
 const init = function () {
   // game state variables
@@ -92,7 +103,7 @@ btnHold.addEventListener("click", function () {
       scores[activePlayer];
 
     // 2. Check if player's score is >=100
-    if (scores[activePlayer] >= 20) {
+    if (scores[activePlayer] >= 100) {
       // Finish the game
       playing = false;
 

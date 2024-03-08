@@ -1,11 +1,7 @@
+//  FIND, FIND INDEX
+
 "use strict";
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// BANKIST APP
-
-// Data
 const account1 = {
   owner: "Jonas Schmedtmann",
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
@@ -36,109 +32,14 @@ const account4 = {
 
 const accounts = [account1, account2, account3, account4];
 
-// Elements
-const labelWelcome = document.querySelector(".welcome");
-const labelDate = document.querySelector(".date");
-const labelBalance = document.querySelector(".balance__value");
-const labelSumIn = document.querySelector(".summary__value--in");
-const labelSumOut = document.querySelector(".summary__value--out");
-const labelSumInterest = document.querySelector(".summary__value--interest");
-const labelTimer = document.querySelector(".timer");
-
-const containerApp = document.querySelector(".app");
-const containerMovements = document.querySelector(".movements");
-
-const btnLogin = document.querySelector(".login__btn");
-const btnTransfer = document.querySelector(".form__btn--transfer");
-const btnLoan = document.querySelector(".form__btn--loan");
-const btnClose = document.querySelector(".form__btn--close");
-const btnSort = document.querySelector(".btn--sort");
-
-const inputLoginUsername = document.querySelector(".login__input--user");
-const inputLoginPin = document.querySelector(".login__input--pin");
-const inputTransferTo = document.querySelector(".form__input--to");
-const inputTransferAmount = document.querySelector(".form__input--amount");
-const inputLoanAmount = document.querySelector(".form__input--loan-amount");
-const inputCloseUsername = document.querySelector(".form__input--user");
-const inputClosePin = document.querySelector(".form__input--pin");
-
-const displayMovements = function (movementsArr) {
-  containerMovements.innerHTML = "";
-
-  movementsArr.forEach(function (mov, i) {
-    const transactionType = mov > 0 ? "deposit" : "withdrawal";
-
-    const html = `
-    <div class="movements__row">
-        <div class="movements__type movements__type--${transactionType}">${
-      i + 1
-    } ${transactionType.toUpperCase()}</div>
-        <div class="movements__value">${mov}€</div>
-    </div>
-    `;
-
-    containerMovements.insertAdjacentHTML("afterbegin", html);
-    // containerMovements.insertAdjacentHTML("beforeend", html);
-  });
-};
-
-displayMovements(account1.movements);
-
-const calcDisplayTotalBalance = function (movements) {
-  const totalBalance = movements.reduce((acc, currMov) => acc + currMov, 0);
-
-  labelBalance.textContent = `${totalBalance}€`;
-};
-calcDisplayTotalBalance(account1.movements);
-
-const calcDisplaySummary = function (movements) {
-  const totalDeposit = movements
-    .filter((mov) => mov > 0)
-    .reduce((totalDeposit, currDeposit) => totalDeposit + currDeposit, 0);
-  labelSumIn.textContent = `${totalDeposit}€`;
-
-  const totalWithdrawal = movements
-    .filter((mov) => mov < 0)
-    .reduce(
-      (totalWithdrawal, currWithdrawal) => totalWithdrawal + currWithdrawal,
-      0
-    );
-  labelSumOut.textContent = `${Math.abs(totalWithdrawal)}€`;
-
-  const interest = movements
-    .map((mov) => mov > 0 && mov * (1.2 / 100))
-    .filter((interest) => interest >= 1)
-    .reduce((acc, mov, idx, arr) => {
-      console.log(arr);
-      return acc + mov;
-    }, 0);
-  labelSumInterest.textContent = `${interest}€`;
-};
-calcDisplaySummary(account1.movements);
-
-const createUserNames = function (accs) {
-  accs.forEach((acc) => {
-    acc.username = acc.owner
-      .toLowerCase()
-      .split(" ")
-      .map((name) => name[0])
-      .join("");
-  });
-};
-createUserNames(accounts);
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! LECTURES
+const currencies = new Map([
+  ["USD", "United States dollar"],
+  ["EUR", "Euro"],
+  ["GBP", "Pound sterling"],
+]);
 
-// const currencies = new Map([
-//   ["USD", "United States dollar"],
-//   ["EUR", "Euro"],
-//   ["GBP", "Pound sterling"],
-// ]);
-
-// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /*
 
@@ -217,7 +118,7 @@ console.log("Samarjeet".at(-1)); //?   also works on strings
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //!  ************************************************ FOR EACH ************************************************
 
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+  const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 for (const [idx, movement] of movements.entries()) {
   if (movement >= 200) {
@@ -286,10 +187,8 @@ currenciesUnique.forEach((value, _, set) => {
   console.log(set);
 });
 
-*/
-
 //!  ****************************************** MAP, FILTER, REDUCE *******************************************
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+  const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 const euroToUsd = 1.1;
 
 //?    MAP, FILTER returns an array, while REDUCE returns a value
@@ -367,3 +266,50 @@ for (const account of accounts)
   if (account.owner === "Jessica Davis") account123 = account;
 
 console.log(account123);
+
+
+
+*/
+
+//!  ******************************************* SOME, EVERY METHOD *******************************************
+
+console.log(movements.includes(1300)); // only checks for equality
+
+console.log(movements.some((mov, idx) => mov > 1000)); // can check for any condition
+
+console.log([10, 20, 30, 80].every((mov) => mov > 0));
+
+const deposit = (mov) => mov > 0; //  separate callback func.
+console.log(movements.every(deposit));
+console.log(movements.some(deposit));
+console.log(movements.filter(deposit));
+
+//!  ********************************************** FLAT, FLATMAP **********************************************
+console.log(movements.flat());
+
+const movements2 = [[1, 2, 3], [4, 5, [-9, -8, -7, [11, 22, 33]], 6], 7, 8];
+console.log(movements2.flat());
+console.log(movements2.flat(2));
+
+// console.log(movements2.flatMap((mov) => mov * 2));
+// console.log([[1, 2, 3], [-1, -2, -3], [11, 22, 33]].map((mov) => mov * 2).flat());
+// console.log([[1, 2, 3], [-1, -2, -3], [11, 22, 33]].flatMap((mov) => mov * 2));
+
+const overallBalance = accounts
+  .map((account) => account.movements)
+  .flat()
+  .reduce((accumulator, currMov) => accumulator + currMov, 0);
+console.log(overallBalance);
+
+const overallBalance2 = accounts
+  .flatMap((account) => account.movements)
+  .reduce((accumulator, currMov) => accumulator + currMov, 0);
+console.log(overallBalance2);
+//?   flapMap have better performance than ".map() followed by .flat()"
+//?   could be used in case we are creating an array of arrays which immediately needs to be flattened
+//?   flatMap() only flattens till the depth of "1", if we need more than that, then flatMap shan't be used
+
+//!  ************************************************* SORTING *************************************************
+const owners = ["jonas", "Zach", "Martha", "Adam"];
+console.log(owners.sort());
+console.log(owners);
