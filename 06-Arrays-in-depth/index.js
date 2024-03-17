@@ -187,7 +187,7 @@ currenciesUnique.forEach((value, _, set) => {
   console.log(set);
 });
 
-//!  ****************************************** MAP, FILTER, REDUCE *******************************************
+//! ******************************************* MAP, FILTER, REDUCE ********************************************
   const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 const euroToUsd = 1.1;
 
@@ -231,7 +231,6 @@ const totalBalance = movements.reduce((acc, curr, idx) => {
   console.log(acc, curr, idx);
   return acc + curr;
 }, 0);
-//!!!!!!!!!!! ******* NOTE *******
 console.log(totalBalance);
 
 let totalBalance2 = 0;
@@ -269,13 +268,12 @@ console.log(account123);
 
 
 
-*/
 
 //!  ******************************************* SOME, EVERY METHOD *******************************************
 
-console.log(movements.includes(1300)); // only checks for equality
+console.log(movements.includes(1300)); //? only checks for equality
 
-console.log(movements.some((mov, idx) => mov > 1000)); // can check for any condition
+console.log(movements.some((mov, idx) => mov > 1000)); //? can check for any condition
 
 console.log([10, 20, 30, 80].every((mov) => mov > 0));
 
@@ -309,7 +307,132 @@ console.log(overallBalance2);
 //?   could be used in case we are creating an array of arrays which immediately needs to be flattened
 //?   flatMap() only flattens till the depth of "1", if we need more than that, then flatMap shan't be used
 
+
+
 //!  ************************************************* SORTING *************************************************
+// STRINGS
 const owners = ["jonas", "Zach", "Martha", "Adam"];
-console.log(owners.sort());
+console.log(owners.sort()); //  mutates the original array
 console.log(owners);
+
+// NUMBERS
+console.log(movements); //  sorts in ascending order, based on the ASCII value
+console.log(movements.sort()); //?  OUTPUT --> [ -130, -400, -650, 1300, 200, 3000, 450, 70]
+
+const arrT = [12, 90, -74, -83, 0, 37, 2, 78];
+
+ *?  returns < 0 -->   A, B (keep order)
+ *?  returns > 0 -->   B, A (switch order)
+ 
+console.log(arrT.sort((a, b) => a - b));
+console.log(arrT.sort((a, b) => b - a));
+
+// ASCENDING ORDER
+arrT.sort(function (a, b) {
+  if (a < b) {
+    return -1;
+  } else if (a > b) {
+    return 1;
+  } else {
+    return 0;
+  }
+});
+console.log(arrT);
+
+// DESCENDING ORDER
+arrT.sort(function (a, b) {
+  if (a < b) {
+    return 1;
+  } else if (a > b) {
+    return -1;
+  } else {
+    return 0;
+  }
+});
+console.log(arrT);
+
+
+
+
+//!  **************************************** CREATING n FILLING ARRAY ****************************************
+//*   traditional ways of creating an array
+console.log([1, 2, 4, 5, 6, 8]);
+
+const arr = new Array(1, 2, 4, 6, 7, 9);
+console.log(arr);
+
+const arr2 = new Array(4, 5, 6);
+console.log(arr2);
+
+//* *******************   Empty array & arr.fill(val, s, e)   *******************
+const x = new Array(7);
+console.log(x); //!   OUTPUT --->   [ <7 empty items> ] {*** in every case, no method can be used on this array except ".fill()" ***}
+
+console.log(x.map(() => 7)); //!   OUTPUT --->   [ <7 empty items> ]
+console.log(x.map((ele) => ele + 7)); //!   OUTPUT --->   [ <7 empty items> ]
+console.log(x.map((ele) => ele / 0)); //!  OUTPUT --->   [ <7 empty items> ]
+
+console.log(x.fill());
+console.log(x.map((ele) => ele * 90));
+console.log(x.fill(3, 2, 5));
+console.log(x.map((ele) => ele * 90));
+console.log(x.fill(3, 1));
+console.log(x.fill(78));
+
+//? *******************   Array.from(iterableObj, mapFunc)   *******************
+const y = Array.from({ length: 7 }, () => 1); //!  OUTPUT --->   [1, 1, 1, 1, 1, 1, 1];
+console.log(y);
+
+const obj1 = { length: 8, i: 0 };
+const y2 = Array.from(obj1, () => obj1.i++);
+console.log(y2);
+
+const z = Array.from({ length: 10 }, (_, i) => i + 1); //!  OUTPUT --->   [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+console.log(z);
+
+console.log(
+  Array.from({ length: 100 }, () => Math.trunc(Math.random() * 6) + 1) //?  Array with 100 random dice rolls
+);
+
+//!!!!!!!!!!!!! ONLY WORKS IN BANKIST FILE
+//*   it is used to convert an iterable in an array, like nodelist, so that array properties like ".map()" can be applied to them
+
+// console.log(document.querySelectorAll(".movements__value"));
+
+// btnLogin.addEventListener("click", function () {
+//   const mov = Array.from(
+//     document.querySelectorAll(".movements__value"),
+//     (ele) => Number(ele.textContent.slice(0, -1))
+//   );
+//   console.log(mov);
+// });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+*/
+
+//! ********************************************* ARRAY EXERCISES **********************************************
+// 1)
+const totalDeposit = accounts
+  .flatMap((account) => account.movements)
+  .filter((mov) => mov > 0)
+  .reduce((accumulator, currMov) => accumulator + currMov, 0);
+
+console.log(totalDeposit);
+
+// 2)
+// const numDepositAbove1000 = accounts
+//   .flatMap((account) => account.movements)
+//   .filter((mov) => mov >= 1000).length;
+
+const numDepositAbove1000 = accounts
+  .flatMap((account) => account.movements)
+  .reduce((count, mov) => (mov >= 1000 ? ++count : count), 0);
+
+console.log(numDepositAbove1000);
+
+// 3)
