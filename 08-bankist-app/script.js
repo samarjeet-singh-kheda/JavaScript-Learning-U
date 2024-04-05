@@ -98,10 +98,14 @@ const inputClosePin = document.querySelector(".form__input--pin");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! ************************************************ FUNCTIONS ************************************************
 
-const displayMovements = function (movementsArr) {
+const displayMovements = function (currentAccountMov, sort = false) {
   containerMovements.innerHTML = "";
 
-  movementsArr.forEach(function (mov, i) {
+  const movementArr = sort
+    ? currentAccountMov.slice().sort()
+    : currentAccountMov;
+
+  movementArr.forEach(function (mov, i) {
     const transactionType = mov > 0 ? "deposit" : "withdrawal";
 
     const html = `
@@ -176,6 +180,13 @@ const updateUI = function (currentAcc) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! ********************************************* EVENT HANDLERS *********************************************
+
+//!     SORT ARRAY
+let sorted = false;
+btnSort.addEventListener("click", function () {
+  sorted = !sorted;
+  displayMovements(currentAccount.movements, sorted);
+});
 
 //!     USER LOGIN
 let currentAccount;
@@ -320,4 +331,12 @@ btnClose.addEventListener("click", function (e) {
 
 //   inputLoginPin.value = "";
 //   inputLoginUsername.value = "";
+// });
+
+//!     SORT MOVEMENTS  (my attempt)
+// btnSort.addEventListener("click", function () {
+//   currentAccount.movements.sort((a, b) => a - b);
+//   console.log(currentAccount.movements);
+
+//   displayMovements(currentAccount.movements);
 // });
