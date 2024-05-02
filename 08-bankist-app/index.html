@@ -26,6 +26,7 @@
           type="text"
           placeholder="user"
           class="login__input login__input--user"
+          autocomplete="username"
         />
 
         <!-- In practice, use type="password" -->
@@ -40,6 +41,7 @@
           placeholder="PIN"
           maxlength="4"
           class="login__input login__input--pin"
+          autocomplete="current-password"
         />
 
         <button class="login__btn">&rarr;</button>
@@ -111,11 +113,16 @@
       <div class="operation operation--close">
         <h2>Close account</h2>
         <form class="form form--close">
-          <input type="text" class="form__input form__input--user" />
+          <input
+            type="text"
+            autocomplete="username"
+            class="form__input form__input--user"
+          />
           <input
             type="password"
             maxlength="6"
             class="form__input form__input--pin"
+            autocomplete="current-password"
           />
           <button class="form__btn form__btn--close">&rarr;</button>
           <label class="form__label">Confirm user</label>
