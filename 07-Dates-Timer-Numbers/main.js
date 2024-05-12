@@ -471,6 +471,8 @@ const options = {
 const locale = navigator.language;
 console.log(locale);
 console.log(new Intl.DateTimeFormat("hi-IN", options).format(now));
+console.log(new Intl.DateTimeFormat("hi-IN").format(now));
+console.log(new Intl.DateTimeFormat("en-US").format(now));
 console.log(new Intl.DateTimeFormat(locale, options).format(now));
 
 //! **************************************** INTERNATIONALIZING NUMBERS ****************************************
