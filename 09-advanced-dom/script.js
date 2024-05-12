@@ -96,6 +96,57 @@ document.querySelector(".nav__links").addEventListener("click", function (e) {
   }
 });
 
+//!   PAGE NAVIGATION
+const tabs = document.querySelectorAll(".operations__tab");
+const tabContainer = document.querySelector(".operations__tab-container");
+const tabsContent = document.querySelectorAll(".operations__content");
+
+tabContainer.addEventListener("click", function (e) {
+  // let clicked;
+
+  // if (e.target.classList.contains("operations__tab")) {
+  //   clicked = e.target;
+  // } else if (e.target.parentElement.classList.contains("operations__tab")) {
+  //   clicked = e.target.parentElement;
+  // }
+
+  // if (clicked) {
+  //   tabs.forEach((tab) => tab.classList.remove("operations__tab--active"));
+
+  //   tabsContent.forEach((tab) =>
+  //     tab.classList.remove("operations__content--active")
+  //   );
+
+  //   clicked.classList.add("operations__tab--active");
+
+  //   document
+  //     .querySelector(`.operations__content--${clicked.dataset.tab}`)
+  //     .classList.add("operations__content--active");
+  // }
+
+  const clicked = e.target.closest(".operations__tab");
+
+  //*   GUARD CLAUSE (modern approach to the above logic)
+  if (!clicked) return;
+
+  /**
+   *  removing active class form all the tabs, then adding it to the targeted one
+   */
+  //?   removing active classes
+  tabs.forEach((tab) => tab.classList.remove("operations__tab--active"));
+  tabsContent.forEach((tab) =>
+    tab.classList.remove("operations__content--active")
+  );
+
+  //?   adding active tab
+  clicked.classList.add("operations__tab--active");
+
+  //?   adding active content
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add("operations__content--active");
+});
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -374,7 +425,6 @@ document.body.addEventListener(
 
 
 
-*/
 
 //! ********************************************** DOM TRAVERSING **********************************************
 const h1 = document.querySelector("h1");
@@ -421,3 +471,38 @@ console.log([...h1.parentElement.children]);
     el.style.transform = "scale(0.5)";
   }
 });
+
+
+
+
+*/
+
+//!   TABBED COMPONENT (my attempt)
+// document
+//   .querySelector(".operations__tab-container")
+//   .addEventListener("click", function (e) {
+//     if (e.target.classList.contains("operations__tab")) {
+//       const contentBtn = e.target;
+//       const contentTab = document.querySelector(
+//         `.operations__content--${e.target.dataset.tab}`
+//       );
+
+//       [...document.querySelector(".operations").children].forEach(function (
+//         el
+//       ) {
+//         if (el.classList.contains("operations__content")) {
+//           el.classList.remove("operations__content--active");
+//         } else {
+//           [
+//             ...document.querySelector(".operations__tab-container").children,
+//           ].forEach((btnEl) =>
+//             btnEl.classList.remove("operations__tab--active")
+//           );
+//         }
+//       });
+
+//       contentBtn.classList.add("operations__tab--active");
+
+//       contentTab.classList.add("operations__content--active");
+//     }
+//   });
