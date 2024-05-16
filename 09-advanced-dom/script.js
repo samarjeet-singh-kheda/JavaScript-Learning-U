@@ -4,11 +4,20 @@ const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
 const btnCloseModal = document.querySelector(".btn--close-modal");
 const btnsOpenModal = document.querySelectorAll(".btn--show-modal");
+
+const header = document.querySelector(".header");
+
 const btnScrollTo = document.querySelector(".btn--scroll-to");
 const section1 = document.querySelector("#section--1");
 
+const tabs = document.querySelectorAll(".operations__tab");
+const tabContainer = document.querySelector(".operations__tab-container");
+const tabsContent = document.querySelectorAll(".operations__content");
+
+const nav = document.querySelector(".nav");
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//!    Modal window
+//!        Modal window
 const openModal = function (e) {
   e.preventDefault();
 
@@ -33,36 +42,30 @@ document.addEventListener("keydown", function (e) {
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//!   COOKIE WIDGET
-
-const header = document.querySelector(".header");
+//!      COOKIE WIDGET
 
 const message = document.createElement("div");
-
 message.classList.add("cookie-message");
-
 message.innerHTML =
   "We use cookies for improved functionality and analytics. <button class='btn btn--close-cookie'>Got it!</button>";
-
 header.prepend(message);
 
 const messageBtn = document.querySelector(".btn--close-cookie");
 
 message.style.backgroundColor = "#37383d";
-message.style.width = "120%";
+message.style.width = "100vw";
 messageBtn.style.fontWeight = "400";
 
 messageBtn.addEventListener("click", () => message.remove());
 
-//!   SMOOTH SCROLLING
-
+//!       SMOOTH SCROLLING
 btnScrollTo.addEventListener("click", function () {
   section1.scrollIntoView({
     behavior: "smooth",
   });
 });
 
-//!   PAGE NAVIGATION
+//!       PAGE NAVIGATION
 // document.querySelectorAll(".nav__link").forEach(function (linkEl) {
 //   linkEl.addEventListener("click", function (e) {
 //     e.preventDefault();
@@ -76,8 +79,7 @@ btnScrollTo.addEventListener("click", function () {
 // });
 
 //? 1. Add event listener to common parent element
-//?z 2. Determine what element originated the event
-
+//? 2. Determine what element originated the event
 document.querySelector(".nav__links").addEventListener("click", function (e) {
   e.preventDefault();
 
@@ -88,19 +90,13 @@ document.querySelector(".nav__links").addEventListener("click", function (e) {
   ) {
     const id = e.target.getAttribute("href");
 
-    console.log(e.target);
-
     document.querySelector(id).scrollIntoView({
       behavior: "smooth",
     });
   }
 });
 
-//!   PAGE NAVIGATION
-const tabs = document.querySelectorAll(".operations__tab");
-const tabContainer = document.querySelector(".operations__tab-container");
-const tabsContent = document.querySelectorAll(".operations__content");
-
+//!       TABBED COMPONENT
 tabContainer.addEventListener("click", function (e) {
   // let clicked;
 
@@ -146,6 +142,192 @@ tabContainer.addEventListener("click", function (e) {
     .querySelector(`.operations__content--${clicked.dataset.tab}`)
     .classList.add("operations__content--active");
 });
+
+//!       MENU FADE ANIMATION
+const handleHover = function (e) {
+  if (e.target.classList.contains("nav__link")) {
+    const link = e.target;
+    const siblings = link.closest(".nav").querySelectorAll(".nav__link");
+    const logo = link.closest(".nav").querySelector(".nav__logo");
+
+    siblings.forEach((el) => {
+      if (el !== link) el.style.opacity = this;
+    });
+    logo.style.opacity = this;
+  }
+};
+
+//?       it is impossible to pass multiple arguments in an event handler function, that's we got a work around it by assigning "this" equals the arguments required
+nav.addEventListener("mouseover", handleHover.bind(0.5));
+nav.addEventListener("mouseout", handleHover.bind(1));
+
+const initialCoordinate = section1.getBoundingClientRect().top;
+
+//!       STICKY NAVIGATION BAR
+//?   only window have "scroll" event, this should not be used as it is bad for performance as window event is fired all the time on every little scroll
+// window.addEventListener("scroll", function () {
+//   // if (section1.getBoundingClientRect().top <= 0) {
+//   //   nav.classList.add("sticky");
+//   // } else {
+//   //   nav.classList.remove("sticky");
+//   // }
+
+//   if (initialCoordinate < this.scrollY) nav.classList.add("sticky");
+//   else nav.classList.remove("sticky");
+// });
+
+const navHeight = nav.getBoundingClientRect().height;
+
+const stickyNav = function (entries) {
+  const [entry] = entries;
+
+  entry.isIntersecting
+    ? nav.classList.remove("sticky")
+    : nav.classList.add("sticky");
+};
+
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
+});
+
+headerObserver.observe(header);
+
+//!       REVEAL SECTIONS
+const allSections = document.querySelectorAll(".section");
+
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) return;
+
+  entry.target.classList.remove("section--hidden");
+
+  observer.unobserve(entry.target);
+};
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.16,
+});
+
+allSections.forEach((section) => {
+  sectionObserver.observe(section);
+  section.classList.add("section--hidden");
+});
+
+//!       LAZY LOADING IMAGES
+// const imgTargets = document.querySelectorAll(".features__img");
+
+const imgTargets = document.querySelectorAll("img[data-src]");
+
+const loadImg = function (entries, observer) {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) return;
+
+  entry.target.src = entry.target.dataset.src;
+
+  entry.target.addEventListener("load", function () {
+    entry.target.classList.remove("lazy-img");
+  });
+
+  observer.unobserve(entry.target);
+};
+
+const imageObserver = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0,
+  rootMargin: "200px",
+});
+
+imgTargets.forEach((img) => imageObserver.observe(img));
+
+//!       SLIDER COMPONENT
+const slider = function () {
+  const slides = document.querySelectorAll(".slide");
+  const sliderBtnRight = document.querySelector(".slider__btn--right");
+  const sliderBtnLeft = document.querySelector(".slider__btn--left");
+  const dotContainer = document.querySelector(".dots");
+
+  let currSlide = 0;
+
+  //?      FUNCTIONS FOR SLIDER COMPONENT
+  const createDots = function () {
+    slides.forEach((_, idx) => {
+      dotContainer.insertAdjacentHTML(
+        "beforeend",
+        `<button class="dots__dot" data-slide="${idx}"></button>`
+      );
+    });
+  };
+
+  const activateDot = (currSlide) => {
+    // document
+    //   .querySelectorAll(".dots__dot")
+    //   .forEach((dot, i) =>
+    //     i === currSlide
+    //       ? dot.classList.add("dots__dot--active")
+    //       : dot.classList.remove("dots__dot--active")
+    //   );
+
+    document
+      .querySelectorAll(".dots__dot")
+      .forEach((dot) => dot.classList.remove("dots__dot--active"));
+
+    document
+      .querySelector(`.dots__dot[data-slide='${currSlide}']`)
+      .classList.add("dots__dot--active");
+  };
+
+  const goToSlide = function (currSlide) {
+    slides.forEach(
+      (slide, idx) =>
+        (slide.style.transform = `translateX(${(idx - currSlide) * 100}%)`)
+    );
+    activateDot(currSlide);
+  };
+
+  const nextSlide = function () {
+    currSlide++;
+
+    if (currSlide >= slides.length) currSlide = 0;
+
+    goToSlide(currSlide);
+  };
+
+  const prevSlide = function () {
+    if (currSlide === 0) currSlide = slides.length - 1;
+    else currSlide--;
+
+    goToSlide(currSlide);
+  };
+
+  const init = function () {
+    createDots();
+    goToSlide(currSlide);
+  };
+
+  init();
+
+  //?      EVENT HANDLERS FOR SLIDER COMPONENT
+  sliderBtnRight.addEventListener("click", nextSlide);
+  sliderBtnLeft.addEventListener("click", prevSlide);
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight") nextSlide();
+    else if (e.key === "ArrowLeft") prevSlide();
+  });
+
+  dotContainer.addEventListener("click", function (e) {
+    if (e.target.classList.contains("dots__dot")) {
+      currSlide = +e.target.dataset.slide;
+      goToSlide(currSlide);
+    }
+  });
+};
+slider();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -475,34 +657,67 @@ console.log([...h1.parentElement.children]);
 
 
 
+//!   TABBED COMPONENT (my attempt)
+document
+  .querySelector(".operations__tab-container")
+  .addEventListener("click", function (e) {
+    if (e.target.classList.contains("operations__tab")) {
+      const contentBtn = e.target;
+      const contentTab = document.querySelector(
+        `.operations__content--${e.target.dataset.tab}`
+      );
+
+      [...document.querySelector(".operations").children].forEach(function (
+        el
+      ) {
+        if (el.classList.contains("operations__content")) {
+          el.classList.remove("operations__content--active");
+        } else {
+          [
+            ...document.querySelector(".operations__tab-container").children,
+          ].forEach((btnEl) =>
+            btnEl.classList.remove("operations__tab--active")
+          );
+        }
+      });
+
+      contentBtn.classList.add("operations__tab--active");
+
+      contentTab.classList.add("operations__content--active");
+    }
+  });
+
+
+
+
 */
 
-//!   TABBED COMPONENT (my attempt)
-// document
-//   .querySelector(".operations__tab-container")
-//   .addEventListener("click", function (e) {
-//     if (e.target.classList.contains("operations__tab")) {
-//       const contentBtn = e.target;
-//       const contentTab = document.querySelector(
-//         `.operations__content--${e.target.dataset.tab}`
-//       );
+//! ***************************************** INTERSECTION OBSERVER API *****************************************
 
-//       [...document.querySelector(".operations").children].forEach(function (
-//         el
-//       ) {
-//         if (el.classList.contains("operations__content")) {
-//           el.classList.remove("operations__content--active");
-//         } else {
-//           [
-//             ...document.querySelector(".operations__tab-container").children,
-//           ].forEach((btnEl) =>
-//             btnEl.classList.remove("operations__tab--active")
-//           );
-//         }
-//       });
+//?   this callback function will be called each time the observed element is intersecting the root element at the threshold we defined
+// const obsCallback = function (entries, observer) {
+//   //*   entries here are actually an array of threshold entries
 
-//       contentBtn.classList.add("operations__tab--active");
-
-//       contentTab.classList.add("operations__content--active");
-//     }
+//   entries.forEach((entry) => {
+//     console.log(entry);
 //   });
+// };
+
+// const obsOptions = {
+//   root: null, //? root is the element that the target is intersecting (an element can be selected, or null is selected if we want it to intersect the entire viewport)
+//   threshold: [0, 0.2], //?   the fraction of intersection at which the observer callback will be called
+// };
+
+// const observer = new IntersectionObserver(obsCallback, obsOptions);
+// observer.observe(section1); //?     observing a target
+
+//! ******************************************* LIFECYCLE DOM EVENTS *******************************************
+document.addEventListener("DOMContentLoaded", (e) => console.log(e));
+
+window.addEventListener("load", (e) => console.log(e));
+
+window.addEventListener("beforeunload", (e) => {
+  e.preventDefault();
+  console.log(e);
+  e.returnValue = "";
+});
