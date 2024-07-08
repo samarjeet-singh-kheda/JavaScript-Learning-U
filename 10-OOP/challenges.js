@@ -112,6 +112,50 @@ DATA CAR 1: 'Tesla' going at 120 km/h, with a charge of 23%
 
 */
 
+const Car3 = function (make, speed) {
+  this.make = make;
+  this.speed = speed;
+};
+
+Car3.prototype.accelerate = function () {
+  this.speed += 10;
+  console.log(this.speed);
+};
+
+Car3.prototype.brake = function () {
+  this.speed -= 5;
+  console.log(this.speed);
+};
+
+const Ev = function (make, speed, charge) {
+  Car3.call(this, make, speed);
+  this.charge = charge;
+};
+
+Ev.prototype = Object.create(Car3.prototype);
+
+Ev.prototype.chargeBattery = function (chargeTo) {
+  this.charge = chargeTo;
+};
+
+Ev.prototype.accelerate = function () {
+  this.speed += 20;
+  this.charge -= 1;
+
+  console.log(
+    `'${this.make}' going at ${this.speed} km/h, at a speed of ${this.charge}%`
+  );
+};
+
+const tesla = new Ev("Tesla", 120, 23);
+console.log(tesla);
+
+tesla.chargeBattery(26);
+console.log(tesla);
+
+tesla.accelerate();
+tesla.brake();
+
 //!      Coding Challenge #4
 
 /* 
@@ -119,10 +163,89 @@ DATA CAR 1: 'Tesla' going at 120 km/h, with a charge of 23%
 
 1. Re-create challenge #3, but this time using ES6 classes: create an 'EVCl' child class of the 'CarCl' class
 2. Make the 'charge' property private;
-3. Implement the ability to chain the 'accelerate' and 'chargeBattery' methods of this class, and also update the 'brake' method in the 'CarCl' class. They experiment with chining!
+3. Implement the ability to chain the 'accelerate' and 'chargeBattery' methods of this class, and also update the 'brake' method in the 'CarCl' class. They experiment with chaining!
 
 DATA CAR 1: 'Rivian' going at 120 km/h, with a charge of 23%
 
 
 
 */
+
+class CarCl4 {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
+  }
+
+  accelerate() {
+    this.speed += 10;
+
+    console.log(this.speed);
+  }
+
+  brake() {
+    this.speed -= 5;
+
+    console.log(this.speed);
+  }
+
+  get speedUS() {
+    return this.speed / 1.6;
+  }
+
+  set speedUS(speed) {
+    this.speed *= 1.6;
+  }
+}
+
+class EvCl4 extends CarCl4 {
+  #charge;
+
+  constructor(make, speed, charge) {
+    super(make, speed);
+
+    this.#charge = charge;
+  }
+
+  accelerate() {
+    this.speed += 20;
+    this.#charge -= 1;
+
+    console.log(
+      `${this.make} is going at ${this.speed} km/h, with a charge of ${
+        this.#charge
+      }%.`
+    );
+
+    return this;
+  }
+
+  chargeBattery(chargeTo) {
+    this.#charge = chargeTo;
+
+    return this;
+  }
+
+  brake() {
+    this.speed -= 10;
+
+    console.log(`The updated speed is ${this.speed} km/h.`);
+
+    return this;
+  }
+}
+
+const rivian = new EvCl4("Rivian", 120, 23);
+console.log(rivian);
+
+rivian
+  .accelerate()
+  .accelerate()
+  .accelerate()
+  .brake()
+  .chargeBattery(50)
+  .accelerate();
+
+console.log(rivian.make);
+console.log(rivian.speed);
+console.log(rivian.speedUS);

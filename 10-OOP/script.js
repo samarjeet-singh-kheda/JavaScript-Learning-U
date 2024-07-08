@@ -148,7 +148,7 @@ class PersonCl {
     return this._fullName;
   }
 
-  //!     INSTANCE METHOD
+  //!     STATIC METHOD
   static hey() {
     console.log("Hey there! 👋");
     console.log(this);
@@ -218,12 +218,11 @@ console.log(personObj);
 
 
 
-*/
 
 //! *********************************************** Object.create ***********************************************
 //?   used to manually set the prototype of an object, to any other object that we want
 //?   it creates a new object, and the prototype of that object will be the object passed in
-//?   here, there is no "new" keyword, constructor function or it's prototype property, but we can still implement prototype chain
+//?   here, there is no "new" keyword, constructor function or its prototype property, but we can still implement prototype chain
 
 const PersonProto = {
   calcAge() {
@@ -231,13 +230,13 @@ const PersonProto = {
   },
 
   init(firstName, birthYear) {
-    //?    used to because there is no built-in constructor function or method here
+    //?    used because there is no built-in constructor function or method here
     this.firstName = firstName;
     this.birthYear = birthYear;
   },
 };
 
-const steven = Object.create(PersonProto);
+const steven = Object.create(PersonProto); //*    returns an empty object with the mentioned prototype
 console.log(steven);
 steven.name = "Steven";
 steven.birthYear = 2007;
@@ -251,4 +250,258 @@ const sarah = Object.create(PersonProto);
 sarah.init("Sarah", 2020);
 sarah.calcAge();
 
+
+
+
 //! *************************** INHERITANCE BETWEEN "classes": Constructor functions ***************************
+
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  console.log(2024 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  // this.firstName = firstName;
+  // this.birthYear = birthYear;
+  Person.call(this, firstName, birthYear); //*   because in a regular function call (without "new"), "this" is set to undefined
+
+  this.course = course;
+};
+
+//?   Linking Prototype
+Student.prototype = Object.create(Person.prototype);
+// Student.__proto__ = Person.prototype;
+
+Student.prototype.introduce = function () {
+  console.log(
+    `Hello! My name is ${this.firstName} and I study ${this.course}.`
+  );
+};
+
+const mike = new Student("Mike", 2020, "CSE");
+console.log(mike);
+mike.introduce();
+mike.calcAge();
+
+console.log(mike.__proto__);
+console.log(mike.__proto__.__proto__);
+console.log(mike.__proto__.__proto__.__proto__);
+console.log(mike.__proto__.__proto__.__proto__.__proto__);
+
+console.log(mike instanceof Student); //!     OUTPUT --->  true
+console.log(mike instanceof Person); //!      OUTPUT --->   true
+console.log(mike instanceof Object); //!      OUTPUT --->   true
+// console.log(mike instanceof null);  //!  Invalid
+
+console.dir(Student.prototype.constructor); //!    OUTPUT ---> Person (instead of Student), because it was created by Object.create
+
+Student.prototype.constructor = Student;
+console.dir(Student.prototype.constructor);
+
+
+
+
+
+//! ********************************* INHERITANCE BETWEEN "classes": ES6 Classes *********************************
+
+class PersonCl {
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+
+  calcAge() {
+    console.log(2024 - this.birthYear);
+  }
+
+  get age() {
+    return 2024 - this.birthYear;
+  }
+
+  set fullName(name) {
+    name.includes(" ")
+      ? (this._fullName = name)
+      : alert(`${name} is not a full name!`);
+  }
+
+  get fullName() {
+    return this._fullName;
+  }
+
+  static hey() {
+    console.log(`Hey there!`, this);
+  }
+}
+
+//?   if we don't need a new property then, we don't even need to specify a constructor in the child class
+class StudentCl2 extends PersonCl {}
+
+const mike = new StudentCl2("Mikey Dev", 2015);
+console.log(mike);
+
+//
+class StudentCl extends PersonCl {
+  constructor(fullName, birthYear, course) {
+    //*   "super" must be called first, it creates the "this" keyword for the child class, without "super" child class will throw error
+
+    super(fullName, birthYear); //*   constructor function of the parent class
+
+    this.course = course;
+  }
+
+  introduce() {
+    console.log(`Hey! I am ${this.fullName} & I study ${this.course}`);
+  }
+
+  //?   shadowing the method of same name in parent class
+  calcAge() {
+    console.log(
+      `I'm ${this.age} years old, but as a student I feel like ${this.age + 10}`
+    );
+  }
+}
+
+const martha = new StudentCl("Martha Jones", 2012, "CSE");
+console.log(martha);
+martha.introduce();
+martha.calcAge();
+
+
+
+
+//! ******************************** INHERITANCE BETWEEN "classes": Object.create ********************************
+const PersonProto = {
+  calcAge() {
+    console.log(2024 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const steven = Object.create(PersonProto);
+steven.init("Steven", 1991);
+console.log(steven);
+
+const StudentProto = Object.create(PersonProto);
+console.log(StudentProto);
+
+StudentProto.init = function (firstName, birthYear, course) {
+  StudentProto.__proto__.init.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+StudentProto.introduce = function () {
+  console.log(`Hey! I'm ${this.firstName} & I study ${this.course}`);
+};
+
+const student1 = Object.create(StudentProto);
+student1.init("Student1", 1999, "CSE");
+console.log(student1);
+student1.calcAge();
+student1.introduce();
+
+
+
+*/
+
+//! ************************************************ ENCAPSULATION ************************************************
+//?     true encapsulation do not exist in JS, but to fake it we use a convention of adding underscore ("_") before the properties and methods that we wish to be inaccessible outside the class
+//?     in reality, these methods can still be accessed outside the class
+
+//!   In classfield proposal, there are 8 different kinds of fields and proposals:-
+/**
+ *
+ *!    Public fields
+ *!    Private fields
+ *!    Public methods
+ *!    Private methods
+ * (static versions of these fields and methods)
+ */
+class Account {
+  //!    1) Public fields
+  //*   a field is a property that will be on all instances (we can also call it public instance field)
+  //*   they are on instances, they are not on the prototype
+  locale = navigator.language;
+
+  //!     2) Private fields (on instances, not prototype)
+  #movements = [];
+  #pin; //?   there is no other way of making a field private whose value is set by the instance itself
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+
+    this.locale = navigator.language;
+
+    //*   protected property
+    this.#pin = pin;
+    // this._movements = [];
+
+    console.log(`Thanks ${this.owner} for opening an account with us`);
+  }
+
+  //!     3) Public methods (all these methods are public by default)
+  //*   Public interface
+  //?   it is common to use getMethod, instead of actual getters and setters
+  getMovements() {
+    return this.#movements;
+  }
+
+  //*   APIs to hide details and simplify interaction with "movements.push()" & "movements.pop()" directly
+  deposit(mov) {
+    this.#movements.push(mov);
+
+    return this;
+  }
+
+  withdraw(mov) {
+    this.deposit(-mov);
+
+    return this;
+  }
+
+  //*     protected method
+  // _approveLoan(val) {
+  //   return this.#movements.length >= 3;
+  // }
+
+  requestLoan(val) {
+    if (this.#approveLoan(val)) {
+      this.deposit(val);
+      console.log("Loan approved!");
+    } else {
+      console.log("Loan denied!");
+    }
+
+    return this;
+  }
+
+  //!     4) Private methods (not even visible on prototype of the object)
+  #approveLoan(val) {
+    return this.#movements.length >= 3;
+  }
+}
+
+const acc1 = new Account("Jonas", "EUR", 1111);
+console.log(acc1);
+
+acc1.deposit(100);
+acc1.deposit(120);
+acc1.deposit(4000);
+acc1.withdraw(120);
+
+acc1.requestLoan(150);
+console.log(acc1.getMovements());
+// console.log(acc1._pin);
+
+//  console.log(acc1.#movements); //? Property '#movements' is not accessible outside class 'Account' because it has a private identifier.
+
+acc1.deposit(300).deposit(500).withdraw(35).requestLoan(25000).withdraw(4000);
+console.log(acc1.getMovements());
